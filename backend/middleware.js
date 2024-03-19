@@ -1,26 +1,25 @@
-const jwt = require('jsonwebtoken')
+const jwt = require("jsonwebtoken");
 
 const authMiddleware = (req, res, next) => {
-    const authHeader = req.headers.authorization
+    const authHeader = req.headers.authorization;
 
-    if(!authHeader || !authHeader.startsWith('Bearer ')){
-        return res.status(403).json({
-            message: '1st middleware error'
-        })
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(403).json({});
     }
 
     const token = authHeader.split(' ')[1];
 
-    try{
+    try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
         req.userId = decoded.userId;
 
-        next()
+        next();
+    } catch (err) {
+        return res.status(403).json({});
     }
-    catch (err){
-        return res.status(403).json({
-            message: '2nd middleware error'
-        })
-    }
+};
+
+module.exports = {
+    authMiddleware
 }

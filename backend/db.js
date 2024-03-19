@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const { default: mongoose } = require("mongoose");
 
 mongoose.connect(process.env.DATABASE_LINK);
 
@@ -35,7 +35,23 @@ const userSchema = new Schema({
     }
 })
 
+// create account schema
+const accountSchema = new Schema({
+    userId: {
+        type: Schema.Types.ObjectId, //Reference to User modal
+        ref: 'User',
+        required: true
+    },
+
+    balance: {
+        type: Number,
+        required: true
+    }
+})
+
+// create account model for schema
+const Account = mongoose.model('Account', accountSchema)
 // create model for schema
 const User = mongoose.model('User', userSchema);
 
-module.exports = { User }
+module.exports = { User, Account }
