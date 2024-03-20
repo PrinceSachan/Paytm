@@ -13,11 +13,11 @@ const signUpBody = zod.object({
     lastName: zod.string()
 })
 
-router.post('signup', async(req, res) => {
+router.post("/signup", async (req, res) => {
     const { success } = signUpBody.safeParse(req.body);
     if(!success) {
         return res.status(411).json({
-            message: 'Email already taken / Incorrect credentials'
+            message: 'Email already taken / Incorrect credential'
         })
     }
 
@@ -99,7 +99,7 @@ const updateBody = zod.object({
     lastName: zod.string().optional()
 })
 
-router.put("/", authMiddleware, async(req, res) => {
+router.put("/update", authMiddleware, async(req, res) => {
     const {success} = updateBody.safeParse(req.body)
     if(!success){
         res.status(411).json({
@@ -111,13 +111,14 @@ router.put("/", authMiddleware, async(req, res) => {
         id: req.userId
     })
 
+
     res.json({
         message: 'Update Successfully'
     })
 })
 
 
-router.get('bulk', async(req, res) => {
+router.get('/bulk', async(req, res) => {
     const filter = req.body.filter || "";
 
     const users = await User.find({
@@ -141,4 +142,4 @@ router.get('bulk', async(req, res) => {
     })
 })
 
-module.exports = router
+module.exports =  router 

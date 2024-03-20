@@ -1,6 +1,8 @@
-const { default: mongoose } = require("mongoose");
+const  mongoose  = require("mongoose");
+require('dotenv').config()
 
-mongoose.connect(process.env.DATABASE_LINK);
+const url = process.env.MONGO_URL
+mongoose.connect(url);
 
 const { Schema } = mongoose;
 
@@ -25,12 +27,14 @@ const userSchema = new Schema({
     firstName: {
         type: String,
         required: true,
+        trim: true,
         maxLength: 20
     },
 
     lastName: {
         type: String,
         required: true,
+        trim: true,
         maxLength: 20
     }
 })
