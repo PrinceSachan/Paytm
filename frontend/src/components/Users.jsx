@@ -1,13 +1,24 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "./Button"
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const Users = () => {
-    // Replace with backend call
-    const [users, setUsers] = useState([{
-        firstName: "Harkirat",
-        lastName: "Singh",
-        _id: 1
-    }]);
+    const [users, setUsers] = useState([]);
+    const [filter, setFilter] = useState("")
+
+    // debouncing
+    useEffect(() => {
+        const getData = setTimeout(async function(){
+            await axios.get(`http://localhost:3000/api/v1/user/bulk?filter=` + filter)
+            .then(res => {
+                setUsers(res.data.user)
+            })
+        }, 500)
+            
+        return () => clearTimeout(getData)
+            
+    }, [filter])
 
     return (
     <div className="px-2">
@@ -15,7 +26,9 @@ export const Users = () => {
             Users
         </div>
         <div className="my-2">
-            <input type="text" placeholder="Search users..." className="w-full px-2 py-1 border rounded border-slate-200"></input>
+            <input 
+                onChange={(e) => setFilter(e.target.value)}
+                type="text" placeholder="Search users..." className="w-full px-2 py-1 border rounded border-slate-200"></input>
         </div>
         <div>
             {users.map(user => <User user={user} />)}
@@ -25,6 +38,14 @@ export const Users = () => {
 }
 
 function User({user}) {
+    const navigate = useNavigate()
+
+
+    const clickHandler = (e) => {
+        e.preventDefault();
+        navigate('/sendmoney?id=' + user._id + '&name=' + user.firstName)
+    }
+
     return <div className="flex justify-between">
         <div className="flex">
             <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
@@ -40,7 +61,7 @@ function User({user}) {
         </div>
 
         <div className="flex flex-col justify-center h-ful">
-            <Button label={"Send Money"} />
+            <Button label={"Send Money"} onClick={clickHandler} />
         </div>
     </div>
 }

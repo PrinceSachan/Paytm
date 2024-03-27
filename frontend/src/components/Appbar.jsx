@@ -1,4 +1,10 @@
+
+import { useNavigate } from "react-router-dom"
+import { Button } from "./Button"
+
 export const Appbar = () => {
+    const navigate = useNavigate()
+
     return (
         <div className="shadow h-14 flex justify-between">
             <div className="flex flex-col justify-center h-full ml-4 font-medium">
@@ -12,6 +18,12 @@ export const Appbar = () => {
                     <div className="flex flex-col justify-center h-full text-xl">
                         U
                     </div>
+                </div>
+                <div className="flex flex-col justify-center mr-2 mb-2">
+                    <Button label="Logout" type="button" onClick={() => {
+                        localStorage.removeItem("token")
+                        navigate('/signin')
+                    }} />
                 </div>
             </div>
         </div>

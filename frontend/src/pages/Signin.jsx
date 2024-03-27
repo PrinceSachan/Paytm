@@ -1,18 +1,31 @@
 import React, { useState } from 'react'
 
-
-
 import { Heading } from '../components/Heading'
 import { SubHeading } from '../components/SubHeading'
 import { InputBox } from '../components/InputBox'
 import { Button } from '../components/Button'
 import { Bottomwarning } from '../components/Bottomwarning'
+import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 const Signin = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const navigate = useNavigate()
 
-
+  const handleClick = async () => {
+    const getData = await axios.post(`http://localhost:3000/api/v1/user/signin`, {
+      username,
+      password
+    })
+    localStorage.setItem("token", getData.data.token)
+    navigate('/dashboard')
+    if(localStorage.getItem("token")){
+      console.log(true)
+    } else {
+      console.log(false)
+    }
+  }
   return (
     <div className="bg-gray-200 h-screen flex justify-center">
       <div className="flex flex-col justify-center">
@@ -22,7 +35,7 @@ const Signin = () => {
           <InputBox label={"Email"} placeHolderName={"prince@gmail.com"} onChange={(e) => setUsername(e.target.value)} />
           <InputBox label={"Password"} placeHolderName={"******"} onChange={(e) => setPassword(e.target.value)} />
           <div className='pt-4'>
-            <Button  label={"Sign In"} />
+            <Button  label={"Sign In"} onClick={handleClick} />
           </div>
           <Bottomwarning label={"Don't have an account?"} linkName={"Sign up"} to={"/signup"} />
         </div>

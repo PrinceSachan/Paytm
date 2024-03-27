@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 import { Heading } from '../components/Heading'
@@ -13,7 +14,20 @@ const Signup = () => {
   const [lastName, setLasttName] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate()
 
+  const clickHanlder = async () => {
+    const response = await axios.post(`http://localhost:3000/api/v1/user/signup`,{
+      username,
+      password,
+      firstName,
+      lastName
+    })
+
+    // console.log(response.data)
+    window.localStorage.setItem("token", response.data.token)
+    navigate(`/dashboard`)
+  }
 
   return (
     <div className="bg-gray-200 h-screen flex justify-center">
@@ -34,7 +48,7 @@ const Signup = () => {
             setPassword(e.target.value)
           }} label={"Password"} placeHolderName={"******"} />
           <div className='pt-4'>
-            <Button type="submit"  label={"Sign up"} />
+            <Button type="submit" onClick={clickHanlder} label={"Sign up"} />
           </div>
           <Bottomwarning label={"Already have an account?"} linkName={"Sign in"} to={"/signin"} />
         </div>
